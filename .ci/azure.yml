@@ -1,0 +1,23 @@
+strategy:
+  matrix:
+    linux:
+      image: 'ubuntu-16.04'
+    mac:
+      image: 'macos-latest'
+
+pool:
+  vmImage: $(image)
+
+steps:
+- script:
+    cmake -E make_directory build
+  displayName: Preparing
+- script:
+    cmake -E chdir build cmake ..
+    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_C_COMPILER=clang
+    -DCMAKE_CXX_COMPILER=clang++
+  displayName: Configuring
+- script:
+    cmake --build build --target cctools -- -j 4
+  displayName: Building
